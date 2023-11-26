@@ -349,3 +349,25 @@ jobs:
             -user=${{ env.FLYWAY_USER }} \
             -password=${{ env.FLYWAY_PASSWORD }} \
             -locations=${{  env.FLYWAY_LOCATION }} migrate
+
+
+  # Stop the self-hosted EC2 runner
+  stop_runner:
+    name: Stop self-hosted EC2 runner
+    needs:
+      - configure_aws_credentials
+      - deploy_aws_infrastructure
+      - start_runner
+      - build_and_push_image
+      - export_env_variables
+      - migrate_data
+    if: needs.deploy_aws_infrastructure.outputs.terraform_action != 'destroy' && always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stop EC2 runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: stop
+          github-token: ${{ env.PERSONAL_ACCESS_TOKEN }}
+          label: ${{ needs.start_runner.outputs.label }}
+          ec2-instance-id: ${{ needs.start_runner.outputs.ec2-instance-id }}
