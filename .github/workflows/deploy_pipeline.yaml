@@ -343,7 +343,7 @@ jobs:
           FLYWAY_USER: ${{ env.RDS_DB_USERNAME }}
           FLYWAY_PASSWORD: ${{ env.RDS_DB_PASSWORD }}
           FLYWAY_LOCATION: filesystem:sql
-        working-directory: ./flyway-${{ FLYWAY_VERSION }}
+        working-directory: ./flyway-${{ env.FLYWAY_VERSION }}
         run: |
           flyway -url=${{  env.FLYWAY_URL}} \
             -user=${{ env.FLYWAY_USER }} \
