@@ -232,7 +232,7 @@ jobs:
       - create_ecr_repository
       - start_runner
     if: needs.deploy_aws_infrastructure.outputs.terraform_action != 'destroy'
-    runs-on:
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
