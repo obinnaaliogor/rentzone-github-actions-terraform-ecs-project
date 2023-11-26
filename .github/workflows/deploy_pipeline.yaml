@@ -302,7 +302,7 @@ jobs:
           echo "RDS_DB_PASSWORD=${{ env.RDS_DB_PASSWORD }}" >> ${{ env.ENVIRONMENT_FILE_NAME }}
 
       - name: Debug Environment File
-        run: cat $GITHUB_ENV
+        run: cat $GITHUB_ENV && cat $ENVIRONMENT_FILE_NAME
 
 
       - name: Upload environment file to S3
