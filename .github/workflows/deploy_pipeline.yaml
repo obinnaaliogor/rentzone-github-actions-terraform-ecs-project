@@ -309,4 +309,4 @@ jobs:
         env:
           ENVIRONMENT_FILE_NAME: ${{ needs.deploy_aws_infrastructure.outputs.environment_file_name }}
           ENV_FILE_BUCKET_NAME: ${{ needs.deploy_aws_infrastructure.outputs.env_file_bucket_name }}
-        run: aws s3 cp ${{ env.ENVIRONMENT_FILE_NAME }} s3://obinna-an-rentzone-app-env-file-bucket/${{ env.ENVIRONMENT_FILE_NAME }}
+        run: aws s3 cp ${{ env.ENVIRONMENT_FILE_NAME }} s3://rentzone-obinna-an-rentzone-app-env-file-bucket/${{ env.ENVIRONMENT_FILE_NAME }}
