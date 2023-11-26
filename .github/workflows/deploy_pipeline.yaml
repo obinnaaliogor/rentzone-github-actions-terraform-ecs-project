@@ -16,11 +16,11 @@ env:
   REPOSITORY_NAME: application-code
   WEB_FILE_ZIP: rentzone.zip
   WEB_FILE_UNZIP: rentzone
-  RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
   RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
   RDS_DB_USERNAME: ${{ secrets.RDS_DB_USERNAME }}
   RDS_DB_PASSWORD: ${{ secrets.RDS_DB_PASSWORD }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  FLYWAY_VERSION: 9.8.1
 
 jobs:
   # Configure AWS credentials
@@ -310,3 +310,42 @@ jobs:
           ENVIRONMENT_FILE_NAME: ${{ needs.deploy_aws_infrastructure.outputs.environment_file_name }}
           ENV_FILE_BUCKET_NAME: ${{ needs.deploy_aws_infrastructure.outputs.env_file_bucket_name }}
         run: aws s3 cp ${{ env.ENVIRONMENT_FILE_NAME }} s3://rentzone-obinna-an-rentzone-app-env-file-bucket/${{ env.ENVIRONMENT_FILE_NAME }}
+
+
+  # Migrate data into RDS database with Flyway
+  migrate_data:
+    name: Migrate data into RDS database with Flyway
+    needs:
+      - deploy_aws_infrastructure
+      - start_runner
+      - build_and_push_image
+    if: needs.deploy_aws_infrastructure.outputs.terraform_action != 'destroy'
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download Flyway
+        run: |
+          wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${{ env.FLYWAY_VERSION }}/flyway-commandline-${{ env.FLYWAY_VERSION }}-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-${{ env.FLYWAY_VERSION }}/flyway /usr/local/bin
+
+      - name: Remove the placeholder (sql) directory
+        run: |
+          rm -rf flyway-${{ env.FLYWAY_VERSION }}/sql/
+
+      - name: Copy the sql folder into the Flyway sub-directory
+        run: |
+          cp -r sql flyway-${{ env.FLYWAY_VERSION }}/
+
+      - name: Run Flyway migrate command
+        env:
+          FLYWAY_URL: jdbc:mysql://${{ needs.deploy_aws_infrastructure.outputs.rds_endpoint }}:3306/${{ env.RDS_DB_NAME }}
+          FLYWAY_USER: ${{ env.RDS_DB_USERNAME }}
+          FLYWAY_PASSWORD: ${{ env.RDS_DB_PASSWORD }}
+          FLYWAY_LOCATION: filesystem:sql
+        working-directory: ./flyway-${{ FLYWAY_VERSION }}
+        run: |
+          flyway -url=${{  env.FLYWAY_URL}} \
+            -user=${{ env.FLYWAY_USER }} \
+            -password=${{ env.FLYWAY_PASSWORD }} \
+            -locations=${{  env.FLYWAY_LOCATION }} migrate
