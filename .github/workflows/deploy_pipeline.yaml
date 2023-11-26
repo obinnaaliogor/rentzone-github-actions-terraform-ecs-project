@@ -10,7 +10,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: "us-east-1"
   TERRAFORM_VERSION: 1.1.7
-  TERRAFORM_ACTION: destroy
+  TERRAFORM_ACTION: apply
   PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
 jobs:
@@ -179,7 +179,7 @@ jobs:
     needs:
       - configure_aws_credentials
       - deploy_aws_infrastructure
-    if: env.TERRAFORM_ACTION == 'apply'
+    if: needs.deploy_aws_infrastructure.outputs.terraform_action != 'destroy'
     runs-on: ubuntu-latest
     steps:
       - name: Check for running EC2 runner
