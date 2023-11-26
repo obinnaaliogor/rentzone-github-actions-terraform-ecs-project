@@ -11,13 +11,13 @@
 
     jobs:
       # Configure AWS credentials
-      configure_aws_credentials: #This is job id and can be named anything
+      configure_aws_credentials:
         name: Configure AWS credentials
         runs-on:
         steps:
           - name: Configure AWS credentials
             uses: aws-actions/configure-aws-credentials@v1-node16
-            with: #To use this inbuilt workflow you will pass the below information.
+            with:
               aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
               aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
               aws-region: ${{ env.AWS_REGION }}
