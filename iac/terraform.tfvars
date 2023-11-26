@@ -29,10 +29,9 @@ alternative_names = "*.wiz-obi.com"
 env_file_bucket_name = "obinna-an-rentzone-app-env-file-bucket"
 env_file_name        = "env-variables-file.env"
 
-# ecs variables
+# ecs variables NB the image_name is the same as the repo name
 architecture = "X86_64"
-image_name   = "rentzone-app"
+image_name   = "rentzone-apps"
 image_tag    = "latest"
-
 # route-53 variables
 record_name = "www"
