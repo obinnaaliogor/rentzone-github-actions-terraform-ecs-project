@@ -10,7 +10,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: "us-east-1"
   TERRAFORM_VERSION: 1.1.7
-  TERRAFORM_ACTION: destroy
+  TERRAFORM_ACTION: apply
 
 jobs:
   # Configure AWS credentials
