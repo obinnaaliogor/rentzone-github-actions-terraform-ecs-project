@@ -13,7 +13,7 @@
       # Configure AWS credentials
       configure_aws_credentials:
         name: Configure AWS credentials
-        runs-on:
+        runs-on: ubuntu-latest
         steps:
           - name: Configure AWS credentials
             uses: aws-actions/configure-aws-credentials@v1-node16
