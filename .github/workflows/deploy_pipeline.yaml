@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Terraform apply/destroy
         working-directory: ./iac
-        run: terraform ${{ env.TERRAFORM_ACTION }}
+        run: terraform ${{ env.TERRAFORM_ACTION }} --auto-approve
 #The below steps will only be executed if the terraform action is apply, theyre outputs that we need to refernce in other jobs.
       - name: Get Terraform output image name
         if: env.TERRAFORM_ACTION == 'apply'
