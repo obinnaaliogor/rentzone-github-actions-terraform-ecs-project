@@ -412,3 +412,35 @@ jobs:
 
     outputs:
       new_td_revision: ${{ env.NEW_TD_REVISION }}
+
+
+  # Restart ECS Fargate service
+  restart_ecs_service:
+    name: Restart ECS Fargate service
+    needs:
+      - configure_aws_credentials
+      - deploy_aws_infrastructure
+      - create_ecr_repository
+      - start_runner
+      - build_and_push_image
+      - export_env_variables
+      - migrate_data
+      - stop_runner
+      - create_td_revision
+    if: needs.deploy_aws_infrastructure.outputs.terraform_action != 'destroy'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update ECS Service
+        env:
+          ECS_CLUSTER_NAME: ${{ needs.deploy_aws_infrastructure.outputs.ecs_cluster_name }}
+          ECS_SERVICE_NAME: ${{ needs.deploy_aws_infrastructure.outputs.ecs_service_name }}
+          TD_NAME: ${{ needs.deploy_aws_infrastructure.outputs.task_definition_name }}
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER_NAME }} --service ${{ env.ECS_SERVICE_NAME }} --task-definition ${{ env.TD_NAME }}:${{ needs.create_td_revision.outputs.new_td_revision }} --force-new-deployment
+
+      - name: Wait for ECS service to become stable
+        env:
+          ECS_CLUSTER_NAME: ${{ needs.deploy_aws_infrastructure.outputs.ecs_cluster_name }}
+          ECS_SERVICE_NAME: ${{ needs.deploy_aws_infrastructure.outputs.ecs_service_name }}
+        run: |
+          aws ecs wait services-stable --cluster ${{ env.ECS_CLUSTER_NAME }} --services ${{ env.ECS_SERVICE_NAME }}
