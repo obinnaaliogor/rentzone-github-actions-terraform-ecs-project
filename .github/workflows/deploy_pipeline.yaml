@@ -161,6 +161,7 @@ jobs:
         run: |
           result=$(aws ecr describe-repositories --repository-names "${{ env.IMAGE_NAME }}" | jq -r '.repositories[0].repositoryName')
           echo "repo_name=$result" >> $GITHUB_ENV
+          cat $GITHUB_ENV
         continue-on-error: true
 
       - name: Create ECR repository
