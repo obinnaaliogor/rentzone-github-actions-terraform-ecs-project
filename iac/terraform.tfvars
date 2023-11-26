@@ -32,6 +32,6 @@ env_file_name        = "env-variables-file.env"
 # ecs variables NB the image_name is the same as the repo name
 architecture = "X86_64"
 image_name   = "rentzone-apps"
-image_tag    = "v2"
+image_tag    = 2
 # route-53 variables
 record_name = "www"
