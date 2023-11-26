@@ -300,6 +300,7 @@ jobs:
           echo "RDS_DB_NAME=${{ env.RDS_DB_NAME }}" >> ${{ env.ENVIRONMENT_FILE_NAME }}
           echo "RDS_DB_USERNAME=${{ env.RDS_DB_USERNAME }}" >> ${{ env.ENVIRONMENT_FILE_NAME }}
           echo "RDS_DB_PASSWORD=${{ env.RDS_DB_PASSWORD }}" >> ${{ env.ENVIRONMENT_FILE_NAME }}
+          cat $ENVIRONMENT_FILE_NAME
 
       - name: Upload environment file to S3
         env:
