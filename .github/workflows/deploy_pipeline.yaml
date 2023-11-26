@@ -1,0 +1,23 @@
+name: Deploy Pipeline
+
+    on:
+      push:
+        branches: [ main ]
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: "us-east-1"
+
+    jobs:
+      # Configure AWS credentials
+      configure_aws_credentials: #This is job id and can be named anything
+        name: Configure AWS credentials
+        runs-on: ubuntu-latest
+        steps:
+          - name:
+            uses: aws-actions/configure-aws-credentials@v1-node16 #we are using inbuilt workflows instead of running aws configure to authenticate the vm with aws.
+            with: #To use the inbuilt you will pass the below information.
+              aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ env.AWS_REGION }}

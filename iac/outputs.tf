@@ -28,7 +28,7 @@ output "private_data_subnet_az1_id" {
 
 # runner security group id
 output "runner_security_group_id" {
-  value = aws_security_group.runner_security_group.id 
+  value = aws_security_group.runner_security_group.id
 }
 
 ### outputs needed to create a new revision for the ecs task definition

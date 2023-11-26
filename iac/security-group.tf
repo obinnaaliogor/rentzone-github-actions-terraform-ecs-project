@@ -40,17 +40,17 @@ resource "aws_security_group" "runner_security_group" {
 
   # allow inbound traffic from the same security group on port 3306
   ingress {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    self = true
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+    self      = true
   }
 
   # allow inbound traffic from the private subnet on port 3306
   ingress {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
     cidr_blocks = [
       var.private_data_subnet_az1_cidr,
       var.private_data_subnet_az2_cidr
@@ -59,9 +59,9 @@ resource "aws_security_group" "runner_security_group" {
 
   # allow outbound traffic to the private subnet on all ports
   egress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
+    from_port = 0
+    to_port   = 65535
+    protocol  = "tcp"
     cidr_blocks = [
       var.private_data_subnet_az1_cidr,
       var.private_data_subnet_az2_cidr
@@ -71,18 +71,18 @@ resource "aws_security_group" "runner_security_group" {
   # allow outbound https traffic to any destination ip to access external resources
   egress {
     description = "https access"
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   # allow outbound http traffic to any destination ip to access external resources
   egress {
     description = "http access"
-    from_port = 80
-    to_port   = 80
-    protocol  = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
