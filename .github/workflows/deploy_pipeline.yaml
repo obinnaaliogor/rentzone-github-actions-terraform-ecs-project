@@ -20,7 +20,7 @@ env:
   RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
   RDS_DB_USERNAME: ${{ secrets.RDS_DB_USERNAME }}
   RDS_DB_PASSWORD: ${{ secrets.RDS_DB_PASSWORD }}
-  ECR_REGISTRY: $${{ secrets.ECR_REGISTRY }}
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
 
 jobs:
   # Configure AWS credentials
