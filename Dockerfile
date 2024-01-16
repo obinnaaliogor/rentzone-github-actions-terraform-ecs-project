@@ -46,7 +46,7 @@ RUN yum install -y mysql-community-client --nogpgcheck
 # Install the MySQL community server package
 RUN yum install mysql-community-server -y --nogpgcheck
 
-# Change directory to the html directory
+# Change directory to the html directory.
 WORKDIR /var/www/html
 
 # Install Git
