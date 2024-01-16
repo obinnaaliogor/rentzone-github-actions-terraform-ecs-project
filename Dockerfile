@@ -45,6 +45,7 @@ RUN yum localinstall mysql80-community-release-el7-3.noarch.rpm -y --nogpgcheck
 # Install the MySQL community server package
 RUN yum install mysql-community-server -y
 
+
 # Change directory to the html directory
 WORKDIR /var/www/html
 
