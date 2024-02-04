@@ -10,7 +10,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: "us-east-1"
   TERRAFORM_VERSION: 1.1.7
-  TERRAFORM_ACTION: apply
+  TERRAFORM_ACTION: destroy
   PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
   GITHUB_USERNAME: obinnaaliogor
   REPOSITORY_NAME: application-code
@@ -446,4 +446,4 @@ jobs:
           aws ecs wait services-stable --cluster ${{ env.ECS_CLUSTER_NAME }} --services ${{ env.ECS_SERVICE_NAME }}
 
 
-          
+
