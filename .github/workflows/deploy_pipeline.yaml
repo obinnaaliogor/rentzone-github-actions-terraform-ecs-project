@@ -208,7 +208,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ env.PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ami-05df2bcc9a22a6001
+          ec2-image-id: ami-04b70fa74e45c3917
           ec2-instance-type: t2.micro
           subnet-id: ${{ needs.deploy_aws_infrastructure.outputs.private_data_subnet_az1_id }}
           security-group-id: ${{ needs.deploy_aws_infrastructure.outputs.runner_security_group_id  }}
