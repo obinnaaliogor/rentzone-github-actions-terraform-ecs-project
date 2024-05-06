@@ -38,7 +38,6 @@ RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride Non
     chmod -R 755 storage/
 
 # Configure .env file
-COPY rentzone/.env .env
 
 RUN sed -i '/^APP_ENV=/ s/=.*$/=production/' .env && \
     sed -i "/^APP_URL=/ s/=.*$/=https:\/\/${DOMAIN_NAME}\//" .env && \
