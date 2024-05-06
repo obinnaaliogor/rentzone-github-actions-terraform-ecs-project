@@ -77,24 +77,17 @@ ENV RDS_DB_NAME=$RDS_DB_NAME
 ENV RDS_DB_USERNAME=$RDS_DB_USERNAME
 ENV RDS_DB_PASSWORD=$RDS_DB_PASSWORD
 
-# # Clone the GitHub repository
-# RUN git clone https://${PERSONAL_ACCESS_TOKEN}@github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}.git
+# Clone the GitHub repository
+RUN git clone https://${PERSONAL_ACCESS_TOKEN}@github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}.git
 
-# # Unzip the zip folder containing the web files
-# RUN unzip ${REPOSITORY_NAME}/${WEB_FILE_ZIP} -d ${REPOSITORY_NAME}/
+# Unzip the zip folder containing the web files
+RUN unzip ${REPOSITORY_NAME}/${WEB_FILE_ZIP} -d ${REPOSITORY_NAME}/
 
-# # Copy the web files into the HTML directory
-# RUN cp -av ${REPOSITORY_NAME}/${WEB_FILE_UNZIP}/. /var/www/html
+# Copy the web files into the HTML directory
+RUN cp -av ${REPOSITORY_NAME}/${WEB_FILE_UNZIP}/. /var/www/html
 
-# # Remove the repository we cloned
-# RUN rm -rf ${REPOSITORY_NAME}
-
-RUN set -eux \
-    && git clone https://${PERSONAL_ACCESS_TOKEN}@github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}.git \
-    && unzip ${REPOSITORY_NAME}/${WEB_FILE_ZIP} -d ${REPOSITORY_NAME}/ \
-    && cp -av ${REPOSITORY_NAME}/${WEB_FILE_UNZIP}/. /var/www/html \
-    && rm -rf ${REPOSITORY_NAME}
-
+# Remove the repository we cloned
+RUN rm -rf ${REPOSITORY_NAME}
 
 # Enable the mod_rewrite setting in the httpd.conf file
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
