@@ -258,7 +258,7 @@ jobs:
           --build-arg RDS_DB_NAME=${{ env.RDS_DB_NAME }} \
           --build-arg RDS_DB_USERNAME=${{ env.RDS_DB_USERNAME }} \
           --build-arg RDS_DB_PASSWORD=${{ env.RDS_DB_PASSWORD }} \
-          -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -f Dockerfile2 .
 
       - name: Retag Docker image
         env:

@@ -1,0 +1,53 @@
+# Use the latest version of the Amazon Linux base image
+FROM amazonlinux:2
+
+# Install necessary packages
+RUN yum update -y && \
+    yum install -y httpd php php-common php-pear php-cgi php-curl php-mbstring php-gd php-mysqlnd php-gettext php-json php-xml php-fpm php-intl php-zip unzip wget git && \
+    amazon-linux-extras enable php7.4 && \
+    yum clean metadata && \
+    yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm && \
+    rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 && \
+    yum install -y mysql-community-client mysql-community-server --nogpgcheck && \
+    yum clean all
+
+# Set working directory to Apache root
+WORKDIR /var/www/html
+
+# Use arguments to set dynamic environment variables
+ARG PERSONAL_ACCESS_TOKEN
+ARG GITHUB_USERNAME
+ARG REPOSITORY_NAME
+ARG WEB_FILE_ZIP
+ARG WEB_FILE_UNZIP
+ARG DOMAIN_NAME
+ARG RDS_ENDPOINT
+ARG RDS_DB_NAME
+ARG RDS_DB_USERNAME
+ARG RDS_DB_PASSWORD
+
+# Clone the GitHub repository and set up the web files
+RUN git clone https://${PERSONAL_ACCESS_TOKEN}@github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}.git && \
+    unzip ${REPOSITORY_NAME}/${WEB_FILE_ZIP} -d ${REPOSITORY_NAME}/ && \
+    cp -av ${REPOSITORY_NAME}/${WEB_FILE_UNZIP}/. . && \
+    rm -rf ${REPOSITORY_NAME}
+
+# Configure HTTPD and PHP settings
+RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf && \
+    chmod -R 755 /var/www/html && \
+    chmod -R 755 storage/
+
+# Configure .env file
+COPY .env .
+RUN sed -i '/^APP_ENV=/ s/=.*$/=production/' .env && \
+    sed -i "/^APP_URL=/ s/=.*$/=https:\/\/${DOMAIN_NAME}\//" .env && \
+    sed -i "/^DB_HOST=/ s/=.*$/=${RDS_ENDPOINT}/" .env && \
+    sed -i "/^DB_DATABASE=/ s/=.*$/=${RDS_DB_NAME}/" .env && \
+    sed -i "/^DB_USERNAME=/ s/=.*$/=${RDS_DB_USERNAME}/" .env && \
+    sed -i "/^DB_PASSWORD=/ s/=.*$/=${RDS_DB_PASSWORD}/" .env
+
+# Expose only Apache port
+EXPOSE 80
+
+# Start Apache in the foreground
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
