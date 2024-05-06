@@ -51,7 +51,7 @@ WORKDIR /var/www/html
 
 # Install Git
 RUN yum install -y git
-
+RUN yum clean all
 
 # Set the build argument directive
 ARG PERSONAL_ACCESS_TOKEN
